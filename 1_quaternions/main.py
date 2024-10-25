@@ -67,6 +67,9 @@ class Quaternion:
         result = self*vec_quat*self.inverse()
         return (result.x, result.y, result.z)
 
+    def rotate_space(self, vectors):
+        return [self.rotate_vector(vector) for vector in vectors]
+
     def to_rotation_matrix(self):
         w, x, y, z = self.w, self.x, self.y, self.z
         return [
@@ -92,4 +95,5 @@ if __name__ == "__main__":
     print(f"{Quaternion(1, 2, 3, 4).conjugate() = }\n")
     print(f"{Quaternion(1, 2, 3, 4).inverse() = }\n")
     print(f"{Quaternion(1, 2, 3, 4).rotate_vector((1, 0, 0)) = }\n")
-    print(f"{Quaternion(1, 2, 3, 4).to_rotation_matrix() = }")
+    print(f"{Quaternion.from_axis_angle((0, 0, 1), math.pi/4).rotate_space([(1, 0, 0), (0, 1, 0), (0, 0, 1)]) = }\n")
+    print(f"{Quaternion(1, 2, 3, 4).to_rotation_matrix() = }\n")
