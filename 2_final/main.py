@@ -1,8 +1,5 @@
-import tgbot;
-
-def main():
-    database_init()
-    run_tgbot()
+import asyncio
+from tgbot import main as run_bot
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(run_bot())
