@@ -23,7 +23,7 @@ from database import (
     database_get_prices_of_item_for_n_days,
     database_add_user
 )
-API_TOKEN = "7900491190:AAEBcRlxhdrZCELhnzvWOvsN8HVbNTKBK2A"
+API_TOKEN = ""
 
 bot = Bot(token=API_TOKEN)
 storage = MemoryStorage()
