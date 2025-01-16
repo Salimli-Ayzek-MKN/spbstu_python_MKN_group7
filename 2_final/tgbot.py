@@ -49,7 +49,7 @@ def create_inline_buttons_for_subscribe(item_names, back_text):
     builder = InlineKeyboardBuilder()
     for name in item_names:
         builder.button(text=name, callback_data=f"subscribe:{name}")
-    builder.button(text=back_text, callback_data="back_to_main")
+        builder.button(text=back_text, callback_data="back_to_main")
     return builder.as_markup()
 
 def create_inline_buttons_for_unsubscribe(item_names, back_text):
@@ -57,19 +57,19 @@ def create_inline_buttons_for_unsubscribe(item_names, back_text):
     builder = InlineKeyboardBuilder()
     for name in item_names:
         builder.button(text=name, callback_data=f"unsubscribe:{name}")
-    builder.button(text=back_text, callback_data="back_to_main")
+        builder.button(text=back_text, callback_data="back_to_main")
     return builder.as_markup()
 
 def create_inline_buttons_for_report(item_names, back_text):
     builder = InlineKeyboardBuilder()
     for name in item_names:
         builder.button(text=name, callback_data=f"report:{name}")
-    builder.button(text=back_text, callback_data="back_to_main")
+        builder.button(text=back_text, callback_data="back_to_main")
     return builder.as_markup()
 
 async def get_user_db_id(message: types.Message) -> int:
     telegram_handle = str(message.from_user.id)
-    user_id = database_add_user(telegram_handle)   
+    user_id = database_add_user(telegram_handle)
     return user_id
 
 @router.message(Command("start"))
@@ -123,7 +123,7 @@ async def main_menu_handler(message: types.Message, state: FSMContext):
         if not sub_item_ids:
             await message.answer("Вы не подписаны ни на один товар.", reply_markup=main_menu)
             return
-        
+
         item_names = []
         for item_id in sub_item_ids:
             name = database_get_item_name(item_id)
@@ -143,7 +143,7 @@ async def main_menu_handler(message: types.Message, state: FSMContext):
         if not sub_item_ids:
             await message.answer("Вы не подписаны ни на один товар.", reply_markup=main_menu)
             return
-        
+
         item_names = []
         for item_id in sub_item_ids:
             name = database_get_item_name(item_id)
@@ -163,7 +163,7 @@ async def main_menu_handler(message: types.Message, state: FSMContext):
         if not sub_item_ids:
             await message.answer("Вы не подписаны ни на один товар.", reply_markup=main_menu)
             return
-        
+
         item_names = []
         for item_id in sub_item_ids:
             name = database_get_item_name(item_id)
@@ -249,8 +249,8 @@ async def handle_days_input(message: types.Message, state: FSMContext):
                 f"Изменения цен за последние {n} дней для {selected_item}:\n"
                 + "\n".join(lines)
             )
-        await message.answer(report, reply_markup=main_menu)
-        await state.clear()
+            await message.answer(report, reply_markup=main_menu)
+            await state.clear()
     else:
         await message.answer(
             "Введите корректное число дней или выберите 'Вернуться в главное меню'.",

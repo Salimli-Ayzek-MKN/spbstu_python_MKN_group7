@@ -60,7 +60,7 @@ def database_add_subscription(user_id, item_name):
     if item_id:
         cursor.execute("INSERT INTO subscriptions (id_user, id_item) VALUES (?, ?)", (user_id, item_id))
         connection.commit()
-    connection.close()
+        connection.close()
 
 def database_remove_subscription(user_id, item_name):
     connection = database_init()
@@ -69,7 +69,7 @@ def database_remove_subscription(user_id, item_name):
     if item_id:
         cursor.execute("DELETE FROM subscriptions WHERE id_user = ? AND id_item = ?", (user_id, item_id))
         connection.commit()
-    connection.close()
+        connection.close()
 
 def database_get_prices_of_item_for_n_days(item_id, n_days):
     connection = database_init()
@@ -90,7 +90,7 @@ def database_add_user(telegram_handle):
     """
     connection = database_init()
     cursor = connection.cursor()
-    
+
     # Проверяем, существует ли пользователь
     user_id = database_get_user_id(telegram_handle)
     if user_id:

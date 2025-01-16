@@ -89,11 +89,11 @@ def generate_price(item_name):
 def create_items():
     connection = sqlite3.connect("pricebot.db")
     cursor = connection.cursor()
-    
+
     # Создаем предметы
     for item_name in items_list:
         cursor.execute("INSERT INTO items (name) VALUES (?)", (item_name,))
-    
+
     connection.commit()
     connection.close()
     print("Реальные предметы добавлены в базу данных.")
@@ -102,11 +102,11 @@ def create_items():
 def create_prices():
     connection = sqlite3.connect("pricebot.db")
     cursor = connection.cursor()
-    
+
     # Получаем все ID предметов
     cursor.execute("SELECT id, name FROM items")
     items = cursor.fetchall()
-    
+
     # Генерируем 10 цен за последние 14 дней для каждого предмета
     for item_id, item_name in items:
         for _ in range(10):
@@ -118,7 +118,7 @@ def create_prices():
                 "INSERT INTO item_prices (id_item, price, date) VALUES (?, ?, ?)",
                 (item_id, random_price, random_date.strftime('%Y-%m-%d'))
             )
-    
+
     connection.commit()
     connection.close()
     print("Цены для каждого предмета добавлены в базу данных.")
