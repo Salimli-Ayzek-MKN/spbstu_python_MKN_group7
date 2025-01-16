@@ -46,10 +46,6 @@ main_menu = ReplyKeyboardMarkup(
 )
 
 def create_inline_buttons_for_subscribe(item_names, back_text):
-    """
-    Создаёт инлайн-кнопки для подписки:
-    callback_data = "subscribe:Товар1"
-    """
     builder = InlineKeyboardBuilder()
     for name in item_names:
         builder.button(text=name, callback_data=f"subscribe:{name}")
@@ -57,10 +53,7 @@ def create_inline_buttons_for_subscribe(item_names, back_text):
     return builder.as_markup()
 
 def create_inline_buttons_for_unsubscribe(item_names, back_text):
-    """
-    Создаёт инлайн-кнопки для отписки:
-    callback_data = "unsubscribe:Товар1"
-    """
+
     builder = InlineKeyboardBuilder()
     for name in item_names:
         builder.button(text=name, callback_data=f"unsubscribe:{name}")
@@ -68,10 +61,6 @@ def create_inline_buttons_for_unsubscribe(item_names, back_text):
     return builder.as_markup()
 
 def create_inline_buttons_for_report(item_names, back_text):
-    """
-    Создаёт инлайн-кнопки для получения отчёта:
-    callback_data = "report:Товар1"
-    """
     builder = InlineKeyboardBuilder()
     for name in item_names:
         builder.button(text=name, callback_data=f"report:{name}")
@@ -79,20 +68,12 @@ def create_inline_buttons_for_report(item_names, back_text):
     return builder.as_markup()
 
 async def get_user_db_id(message: types.Message) -> int:
-    """
-    Создаёт/получает пользователя в БД по его telegram_handle (здесь from_user.id).
-    Возвращает user_id из таблицы users.
-    """
     telegram_handle = str(message.from_user.id)
     user_id = database_add_user(telegram_handle)   
     return user_id
 
 @router.message(Command("start"))
 async def start_command(message: types.Message):
-    """
-    Стартовая команда: при вызове /start создаём/получаем пользователя в БД,
-    а затем показываем главное меню.
-    """
     user_db_id = await get_user_db_id(message)
     await message.answer(
         "Добро пожаловать в бот отслеживания цен! Вы успешно зарегистрированы.",
@@ -107,14 +88,13 @@ async def start_command(message: types.Message):
 ])
 async def main_menu_handler(message: types.Message, state: FSMContext):
     """
-    Обработка нажатий на кнопки главного меню.
-    Здесь используется уже зарегистрированный пользователь
-    (поскольку регистрация происходит при /start).
+    Здесь используется уже зарегистрированный пользователь!!!!
+    (регистрация происходит при /start !!!!!!!!!).
     """
     telegram_handle = str(message.from_user.id)
     user_db_id = database_get_user_id(telegram_handle)
     if not user_db_id:
-        await message.answer("Сначала введите /start для регистрации.", reply_markup=main_menu)
+        await message.answer("Сначала введите /start для регистрации!!!", reply_markup=main_menu)
         return
 
     if message.text == "Подписаться":
@@ -195,10 +175,6 @@ async def main_menu_handler(message: types.Message, state: FSMContext):
 
 @router.callback_query()
 async def inline_button_handler(callback_query: CallbackQuery, state: FSMContext):
-    """
-    Обрабатывает нажатия на инлайн-кнопки:
-    subscribe:<name> | unsubscribe:<name> | report:<name> | back_to_main
-    """
     telegram_handle = str(callback_query.from_user.id)
     user_db_id = database_get_user_id(telegram_handle)
     if not user_db_id:
@@ -242,9 +218,6 @@ async def inline_button_handler(callback_query: CallbackQuery, state: FSMContext
 
 @router.message(Form.waiting_for_days)
 async def handle_days_input(message: types.Message, state: FSMContext):
-    """
-    Обрабатывает ввод количества дней для отчёта.
-    """
     telegram_handle = str(message.from_user.id)
     user_db_id = database_get_user_id(telegram_handle)
     if not user_db_id:
