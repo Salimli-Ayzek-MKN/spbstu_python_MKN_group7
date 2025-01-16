@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+﻿from dataclasses import dataclass
 from datetime import date, timedelta
 from decimal import Decimal
 import sqlite3
@@ -79,3 +79,30 @@ def database_get_prices_of_item_for_n_days(item_id, n_days):
     result = cursor.fetchall()
     connection.close()
     return [Price(item_id=item_id, date=row[0], price=Decimal(row[1])) for row in result]
+
+def database_add_user(telegram_handle):
+    """
+    Добавляет нового пользователя в таблицу users.
+    Если пользователь уже существует, возвращает его ID.
+
+    :param telegram_handle: Telegram-имя пользователя (например, '@user').
+    :return: ID пользователя.
+    """
+    connection = database_init()
+    cursor = connection.cursor()
+    
+    # Проверяем, существует ли пользователь
+    user_id = database_get_user_id(telegram_handle)
+    if user_id:
+        connection.close()
+        return user_id
+
+    # Добавляем нового пользователя
+    cursor.execute("INSERT INTO users (telegram_handle) VALUES (?)", (telegram_handle,))
+    connection.commit()
+
+    # Получаем ID нового пользователя
+    user_id = cursor.lastrowid
+    connection.close()
+
+    return user_id
