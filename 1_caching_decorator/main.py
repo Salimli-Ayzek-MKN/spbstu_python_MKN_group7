@@ -4,40 +4,38 @@ from collections import deque
 from functools import wraps
 
 def cache_with_limit(depth):
-    
-    
     def decorator(func):
         cache = {}
-        call_order = deque(maxlen=depth)  # Хранит порядок вызовов для соблюдения глубины кэша
-        
+        call_order = deque(maxlen=depth)  # РҐСЂР°РЅРёС‚ РїРѕСЂСЏРґРѕРє РІС‹Р·РѕРІРѕРІ РґР»СЏ СЃРѕР±Р»СЋРґРµРЅРёСЏ РіР»СѓР±РёРЅС‹ РєСЌС€Р°
+
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # Создаем ключ для кэша на основе аргументов
+            # РЎРѕР·РґР°РµРј РєР»СЋС‡ РґР»СЏ РєСЌС€Р° РЅР° РѕСЃРЅРѕРІРµ Р°СЂРіСѓРјРµРЅС‚РѕРІ
             key = (args, frozenset(kwargs.items()))
-            
+
             if key in cache:
                 print(f"Result for {args} was taken from cache")
                 return cache[key]
-            
-            # Если результат не в кэше, выполняем функцию
+
+            # Р•СЃР»Рё СЂРµР·СѓР»СЊС‚Р°С‚ РЅРµ РІ РєСЌС€Рµ, РІС‹РїРѕР»РЅСЏРµРј С„СѓРЅРєС†РёСЋ
             result = func(*args, **kwargs)
-            
-            # Если кэш переполнен, удаляем самый старый вызов
+
+            # Р•СЃР»Рё РєСЌС€ РїРµСЂРµРїРѕР»РЅРµРЅ, СѓРґР°Р»СЏРµРј СЃР°РјС‹Р№ СЃС‚Р°СЂС‹Р№ РІС‹Р·РѕРІ
             if len(call_order) == depth:
                 oldest_key = call_order.popleft()
                 del cache[oldest_key]
-            
-            # Сохраняем результат в кэш
+
+            # РЎРѕС…СЂР°РЅСЏРµРј СЂРµР·СѓР»СЊС‚Р°С‚ РІ РєСЌС€
             cache[key] = result
             call_order.append(key)
-            
+
             return result
-        
+
         return wrapper
-    
+
     return decorator
 
-# Пример использования декоратора с глубиной кэша 3
+# РџСЂРёРјРµСЂ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ РґРµРєРѕСЂР°С‚РѕСЂР° СЃ РіР»СѓР±РёРЅРѕР№ РєСЌС€Р° 3
 @cache_with_limit(3)
 def slow_function(x):
     return x * x
@@ -50,15 +48,14 @@ def slowest_function(x,y):
 def absolut_slowest_function(x,y,z):
     return x * y * z
 
-print(slow_function(2))  # Вычисляется и кэшируется
-print(slow_function(2))  # Берется из кэша
-print(slow_function(3))  # Вычисляется и кэшируется
-print(slow_function(4))  # Вычисляется и кэшируется
-print(slow_function(5))  # Вычисляется и кэшируется, кэш для 2 удаляется
-print(slow_function(2))  # Повторное вычисление, так как результат был удален из кэша
-print(slow_function(5))  # Вычисляется и кэшируется, кэш для 2 удаляется
+print(slow_function(2))  # Р’С‹С‡РёСЃР»СЏРµС‚СЃСЏ Рё РєСЌС€РёСЂСѓРµС‚СЃСЏ
+print(slow_function(2))  # Р‘РµСЂРµС‚СЃСЏ РёР· РєСЌС€Р°
+print(slow_function(3))  # Р’С‹С‡РёСЃР»СЏРµС‚СЃСЏ Рё РєСЌС€РёСЂСѓРµС‚СЃСЏ
+print(slow_function(4))  # Р’С‹С‡РёСЃР»СЏРµС‚СЃСЏ Рё РєСЌС€РёСЂСѓРµС‚СЃСЏ
+print(slow_function(5))  # Р’С‹С‡РёСЃР»СЏРµС‚СЃСЏ Рё РєСЌС€РёСЂСѓРµС‚СЃСЏ, РєСЌС€ РґР»СЏ 2 СѓРґР°Р»СЏРµС‚СЃСЏ
+print(slow_function(2))  # РџРѕРІС‚РѕСЂРЅРѕРµ РІС‹С‡РёСЃР»РµРЅРёРµ, С‚Р°Рє РєР°Рє СЂРµР·СѓР»СЊС‚Р°С‚ Р±С‹Р» СѓРґР°Р»РµРЅ РёР· РєСЌС€Р°
+print(slow_function(5))  # Р’С‹С‡РёСЃР»СЏРµС‚СЃСЏ Рё РєСЌС€РёСЂСѓРµС‚СЃСЏ, РєСЌС€ РґР»СЏ 2 СѓРґР°Р»СЏРµС‚СЃСЏ
 print(slowest_function(2,3))
 print(slowest_function(2,3))
 print(absolut_slowest_function(2,3,4))
 print(absolut_slowest_function(2,3,4))
-
